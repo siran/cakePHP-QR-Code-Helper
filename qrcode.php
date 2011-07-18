@@ -16,7 +16,7 @@ class QrcodeHelper extends AppHelper {
 	 * 
 	 * @var string
 	 */
-	var $size = '350x350';
+	var $default_size = 'L';
 	
 	/** 
 	 * Encoding:
@@ -52,6 +52,17 @@ class QrcodeHelper extends AppHelper {
 	 * @var string
 	 */
 	var $base_url = 'http://chart.apis.google.com/chart?cht=qr&chl=';
+	
+	/**
+	 * size of the chart
+	 *
+	 * @var array 
+	 */
+	var $sizes = array(
+	              'L' => '350x350',
+	              'M' => '230x230',
+	              'S' => '120x120',
+	             );
 	
 	/**
 	 * Encode Text. You can use plaintext or encode Infos in whatever format you want.
@@ -240,8 +251,10 @@ class QrcodeHelper extends AppHelper {
 	 * @return string url parameter string
 	 */
 	function _optionsString($options) {
-		if (!isset($options['size'])) {
-			$options['size'] = $this->size;
+		if (!isset($options['size'])) {						
+			$options['size'] = $this->sizes[$this->default_size];
+		} elseif (!empty($options['size']) && array_key_exists($options['size'], $this->sizes)) {
+		    $options['size'] = $this->sizes[$options['size']];
 		}
 		if (!isset($options['encode'])) {
 			$options['encode'] = $this->encode;
@@ -254,6 +267,29 @@ class QrcodeHelper extends AppHelper {
 		}
 		return '&chs='.$options['size'].'&choe='.$options['encode'].'&chld='.$options['error_correction'].'|'.$options['margin'];
 	}
-
-}
+	
+	/**
+	 * Use wifi
+	 * 
+	 * Wifi Params:
+	 * 	ssid => network id
+	 * 	password => network password
+	 * 	type => network type
+	 * 
+	 * @param array $wifi
+	 * @param array $options options array, see helper vars for description of parameters
+	 */
+	function wifi($wifi = array(), $options = array()) {
+		if (!isset($wifi['ssid'])) {
+			$wifi['ssid'] = '';
+		}
+		if (!isset($wifi['password'])) {
+			$wifi['password'] = '';
+		}
+		if (!isset($wifi['type'])) {
+			$wifi['type'] = 'WEP';
+		}
+		return $this->Html->image($this->base_url . urlencode('wifi:' . $wifi['ssid'] . ',' . $wifi['type'] . ',' . $wifi['password']) . $this->_optionsString($options));
+	}
+}	
 ?>
