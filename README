@@ -16,8 +16,8 @@ Includes functions to create QR codes for:
 * URLs
 
 Usage:
-* Copy the "qrcode.php" to your "app/views/helpers" folder.
-* In the Controller add 'Qrcode' to you helpers array.
+* clone repo: git submodule add <repoadress> plugins/qrcode
+* In the Controller add 'Qrcode.Qrcode' to you helpers array.
 * In the view for example do "<? echo $this->Qrcode->text('Hello World'); ?>"
 
 Second parameter always is an optional option array. For explanation of these options and the required parameter for each function read the well documented Code. :)
